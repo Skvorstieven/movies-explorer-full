@@ -12,7 +12,14 @@ export default function Profile(props) {
   const navigate = useNavigate();
 
   // Get logout handler
-  const { onLogoutClick } = props;
+  const {
+    onLogoutClick,
+    onUpdateUserClick,
+    error,
+    setError,
+    isEditable,
+    setIsEditable,
+  } = props;
 
   // Turn on form validation
   const formValidation = useFormWithValidation(false);
@@ -28,13 +35,11 @@ export default function Profile(props) {
     email: true,
   });
 
-  const [isEditable, setIsEditable] = React.useState(false);
-
   // Clear inputs
   function ClearInputs() {
     setFormValue({
-      name: '',
-      email: '',
+      name: currentUser.name,
+      email: currentUser.email,
     });
     setFormValidity({
       name: true,
@@ -42,9 +47,15 @@ export default function Profile(props) {
     });
   }
 
-  // Clear inputs on mount
+  // Clear error
+  function ClearError() {
+    setError('');
+  }
+
+  // Clear form on mount
   React.useEffect(() => {
     ClearInputs();
+    ClearError();
   }, []);
 
   // Set current user info as form values
@@ -59,15 +70,16 @@ export default function Profile(props) {
   function handleSubmit(e) {
     e.preventDefault();
 
+    onUpdateUserClick(formValue);
+
     ClearInputs();
 
     formValidation.resetForm();
-
-    navigate('/');
   }
 
   // Input change handler
   function handleChange(e) {
+    ClearError();
     setFormValue({ ...formValue, [e.target.name]: e.target.value });
     formValidation.handleChange(e);
     setFormValidity({ ...formValidity, [e.target.name]: e.target.checkValidity() });
@@ -134,7 +146,7 @@ export default function Profile(props) {
         <div className="profile__button-wrapper">
           <button className={`profile__button ${isEditable ? 'profile__button_hidden' : ''}`} type="button" onClick={onEditClick}>Редактировать</button>
           <button className={`profile__button profile__button_type_logout ${isEditable ? 'profile__button_hidden' : ''}`} type="button" onClick={handleLogoutClick}>Выйти из аккаунта</button>
-          <span className="profile__error">{formValidation.errors.name || formValidation.errors.email}</span>
+          <span className="profile__error">{formValidation.errors.name || formValidation.errors.email || error}</span>
           <button className={`profile__button profile__button_type_submit ${isEditable ? '' : 'profile__button_hidden'}`} type="submit">Сохранить</button>
         </div>
       </form>

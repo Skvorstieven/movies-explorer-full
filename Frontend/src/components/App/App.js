@@ -22,7 +22,8 @@ import mainApi from '../../utils/MainApi';
 function App() {
   // Create states for curent user and authorization status
   const [currentUser, setCurrentUser] = React.useState(user);
-  const [fullPageFormError, setFullPageFormError] = React.useState('');
+  const [fetchError, setFetchError] = React.useState('');
+  const [profileIsEditable, setProfileIsEditable] = React.useState(false);
   const [isAuthorized, setIsAuthorized] = React.useState(false);
 
   // Get navigate
@@ -46,7 +47,7 @@ function App() {
         handleLogin(res);
       })
       .catch((err) => {
-        setFullPageFormError(err.message);
+        setFetchError(err.message);
       });
   }
 
@@ -75,7 +76,18 @@ function App() {
         handleRegister();
       })
       .catch((err) => {
-        setFullPageFormError(err.message);
+        setFetchError(err.message);
+      });
+  }
+
+  function handleUpdateUserClick(reqBody) {
+    mainApi.updateUser(reqBody)
+      .then((res) => {
+        setProfileIsEditable(false);
+        setCurrentUser(res);
+      })
+      .catch((err) => {
+        setFetchError(err.message);
       });
   }
 
@@ -107,7 +119,14 @@ function App() {
   const profile = (
     <>
       <Header isLanding={false} isAuthorized={isAuthorized} />
-      <Profile onLogoutClick={handleLogoutClick} />
+      <Profile
+        onLogoutClick={handleLogoutClick}
+        onUpdateUserClick={handleUpdateUserClick}
+        isEditable={profileIsEditable}
+        setIsEditable={setProfileIsEditable}
+        error={fetchError}
+        setError={setFetchError}
+      />
     </>
   );
 
@@ -116,8 +135,8 @@ function App() {
     { path: '/movies', element: movies },
     { path: '/saved-movies', element: savedMovies },
     { path: '/profile', element: profile },
-    { path: '/signup', element: <Register onRegisterClick={handleRegisterClick} error={fullPageFormError} setError={setFullPageFormError} /> },
-    { path: '/signin', element: <Login onLoginClick={handleLoginClick} error={fullPageFormError} setError={setFullPageFormError} /> },
+    { path: '/signup', element: <Register onRegisterClick={handleRegisterClick} error={fetchError} setError={setFetchError} /> },
+    { path: '/signin', element: <Login onLoginClick={handleLoginClick} error={fetchError} setError={setFetchError} /> },
     { path: '*', element: <NotFound /> },
   ];
 

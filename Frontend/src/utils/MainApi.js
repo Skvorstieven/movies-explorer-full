@@ -64,7 +64,7 @@ class MainApi {
       headers: this._headers,
       body: JSON.stringify({
         name: data.name,
-        about: data.about,
+        email: data.email,
       }),
     })
       .then((res) => this._checkResponse(res));
