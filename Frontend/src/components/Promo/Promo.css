@@ -1,0 +1,148 @@
+/* Default styles for screens larger than 1024px */
+.promo {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  background-color: #073042;
+}
+
+.promo__wrapper {
+  width: min(100% - 140px, 1140px);
+  margin: 0;
+  padding: 76px 0;
+  display: grid;
+  grid-template-areas: "title image" "button .";
+  justify-content: space-between;
+
+}
+
+.promo__title {
+  max-width: 640px;
+  text-align: left;
+  margin: 0 0 36px;
+  padding: 0;
+  font-size: 50px;
+  font-weight: 400;
+  line-height: 58px;
+}
+
+.promo__subtitle {
+  max-width: 310px;
+  text-align: left;
+  margin: 0;
+  padding: 0;
+  font-size: 13px;
+  font-weight: 400;
+  line-height: normal;
+  opacity: 0.5;
+}
+
+.promo__title-wrapper {
+  grid-area: title;
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+}
+
+.promo__image {
+  max-width: 310px;
+  margin: 0 0 0 10px;
+  padding: 0;
+  grid-area: image;
+}
+
+.promo__learn-more-button {
+  width: 129px;
+  height: 36px;
+  margin: 84px 0 0;
+  padding: 0;
+  grid-area: button;
+  border-radius: 3px;
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  color: #ffffff;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 16px;
+  transition: all 0.3s ease-in-out;
+  text-decoration: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-sizing: border-box;
+}
+
+.promo__learn-more-button:hover {
+  opacity: 0.8;
+}
+
+/* Media Query for screens up to 1024px */
+@media screen and (max-width: 1024px) {
+  .promo__title {
+    font-size: 40px;
+    line-height: 50px;
+  }
+}
+
+/* Media Query for screens up to 768px */
+@media screen and (max-width: 768px) {
+  .promo__wrapper {
+    padding: 140px 0 76px;
+    grid-template-areas:
+      "image"
+      "title"
+      "button";
+  }
+
+  .promo__image {
+    width: min(100%, 310px);
+    margin: 0 auto 48px;
+  }
+
+  .promo__title {
+    text-align: center;
+    width: 100%;
+    margin: 0 0 22px;
+  }
+
+  .promo__subtitle {
+    text-align: center;
+    width: min(100%, 260px);
+  }
+
+  .promo__title-wrapper {
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .promo__learn-more-button {
+    margin: 92px auto 0;
+  }
+}
+
+/* Media Query for screens up to 500px */
+@media screen and (max-width: 500px) {
+  .promo__wrapper {
+    width: min(100% - 20px, 300px);
+    padding: 70px 0 30px;
+  }
+
+  .promo__image {
+    max-width: 210px;
+    margin: 0 auto 44px;
+  }
+
+  .promo__title {
+    font-size: 30px;
+    line-height: 38px;
+    letter-spacing: -1.2px;
+    width: 100%;
+    margin: 0 0 24px;
+  }
+
+  .promo__learn-more-button {
+    margin: 80px auto 0;
+  }
+}
