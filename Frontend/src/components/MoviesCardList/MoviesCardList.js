@@ -41,20 +41,20 @@ export default function MoviesCardList(props) {
     <div className="movies-card-list">
       {moviesToRender.length !== 0 ? (
         <ul className="movies-card-list__list">
-          {loadedMovies.map((movie) => (
-            <MoviesCard
-              key={movie.movieId}
-              id={movie.movieId}
-              name={movie.nameRU}
-              duration={movie.duration}
-              thumbnail={movie.thumbnail}
-              isAlreadySaved={
-                savedMovies.some((savedMovie) => savedMovie.movieId === movie.movieId)
-              }
-              isSavedMovies={isSavedMovies}
-              onButtonClick={onButtonClick}
-            />
-          ))}
+          {loadedMovies.map((movie) => {
+            const isAlreadySaved = savedMovies.some(
+              (savedMovie) => savedMovie.movieId === movie.movieId,
+            );
+            return (
+              <MoviesCard
+                key={movie.movieId}
+                movie={movie}
+                isAlreadySaved={isAlreadySaved}
+                isSavedMovies={isSavedMovies}
+                onButtonClick={onButtonClick}
+              />
+            );
+          })}
         </ul>
       ) : (
         <p className="movies-card-list__not-found-message">

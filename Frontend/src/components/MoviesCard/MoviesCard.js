@@ -5,22 +5,21 @@ import deleteIconPath from '../../images/icons/delete-movie-icon.svg';
 
 export default function Card(props) {
   const {
-    id,
-    name,
-    duration,
-    thumbnail,
+    movie,
     isAlreadySaved,
     isSavedMovies,
     onButtonClick,
   } = props;
+
+  const { nameRU, thumbnail, duration } = movie;
 
   // Creat state for card
   const [isSaved, setIsSaved] = React.useState(isAlreadySaved);
 
   // Click handler
   function onClick() {
+    onButtonClick(movie, isSaved);
     setIsSaved(!isSaved);
-    onButtonClick(id);
   }
 
   // Button for Movies component
@@ -41,13 +40,13 @@ export default function Card(props) {
     <li className="movies-card">
       <div className="movies-card__text-wrapper">
         <p className="movies-card__name">
-          { name }
+          { nameRU }
         </p>
         <p className="movies-card__duration">
           {`${Math.floor(duration / 60)}ч ${duration % 60}м`}
         </p>
       </div>
-      <img className="movies-card__thumbnail" src={thumbnail} alt={name} />
+      <img className="movies-card__thumbnail" src={thumbnail} alt={nameRU} />
       {isSavedMovies ? savedMoviesButton : moviesButton}
     </li>
   );

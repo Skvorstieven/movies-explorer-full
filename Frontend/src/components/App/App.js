@@ -16,7 +16,7 @@ import Register from '../Register/Register';
 
 import CurrentUserContext from '../../contexts/CurrentUserContext';
 
-import { fetchedMovies, savedByUserMovies, user } from '../../utils/constants';
+import { fetchedMovies, user } from '../../utils/constants';
 import mainApi from '../../utils/MainApi';
 
 function App() {
@@ -25,6 +25,7 @@ function App() {
   const [fetchError, setFetchError] = React.useState('');
   const [profileIsEditable, setProfileIsEditable] = React.useState(false);
   const [isAuthorized, setIsAuthorized] = React.useState(false);
+  const [savedByUserMovies, setSavedByUserMovies] = React.useState([]);
 
   // Get navigate
   const navigate = useNavigate();
@@ -51,14 +52,65 @@ function App() {
       });
   }
 
+  function handleTockenCheck(res) {
+    if (res.ok) {
+      res.json().then((resData) => {
+        handleLogin(resData);
+      });
+    }
+  }
+
+  function handleGetSavedMovies() {
+    mainApi.getSavedMovies()
+      .then((res) => {
+        setSavedByUserMovies(res);
+      })
+      .catch((err) => {
+        setFetchError(err.message);
+      });
+  }
+
+  function handleSaveMovie(movie) {
+    mainApi.saveMovie(movie)
+      .then(() => {
+        handleGetSavedMovies();
+      })
+      .catch((err) => {
+        setFetchError(err.message);
+      });
+  }
+
+  function handleDeleteMovie(movie) {
+    const savedMovieId = savedByUserMovies.find((item) => item.movieId === movie.movieId)._id;
+    mainApi.deleteMovie(savedMovieId)
+      .then(() => {
+        setSavedByUserMovies(
+          savedByUserMovies.filter((cardMovie) => cardMovie.movieId !== movie.movieId),
+        );
+      })
+      .then(() => {
+        handleGetSavedMovies();
+      })
+      .catch((err) => {
+        setFetchError(err.message);
+      });
+  }
+
+  function handleCardButtonClick(movie, isSaved) {
+    if (isSaved) {
+      handleDeleteMovie(movie);
+    } else {
+      handleSaveMovie(movie);
+    }
+  }
+
   React.useEffect(() => {
     mainApi.checkToken()
       .then((res) => {
-        if (res.ok) {
-          res.json().then((resData) => {
-            handleLogin(resData);
-          });
-        }
+        handleTockenCheck(res);
+      })
+      .then(() => {
+        handleGetSavedMovies();
       })
       .catch((err) => {
         // eslint-disable-next-line no-console
@@ -103,7 +155,11 @@ function App() {
   const movies = (
     <>
       <Header isLanding={false} isAuthorized={isAuthorized} />
-      <Movies moviesToRender={fetchedMovies} savedMovies={savedByUserMovies} />
+      <Movies
+        moviesToRender={fetchedMovies}
+        savedMovies={savedByUserMovies}
+        onButtonClick={handleCardButtonClick}
+      />
       <Footer />
     </>
   );
@@ -111,7 +167,11 @@ function App() {
   const savedMovies = (
     <>
       <Header isLanding={false} isAuthorized={isAuthorized} />
-      <SavedMovies moviesToRender={savedByUserMovies} savedMovies={savedByUserMovies} />
+      <SavedMovies
+        moviesToRender={savedByUserMovies}
+        savedMovies={savedByUserMovies}
+        onButtonClick={handleCardButtonClick}
+      />
       <Footer />
     </>
   );

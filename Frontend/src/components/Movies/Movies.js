@@ -3,12 +3,7 @@ import SearchForm from '../SearchForm/SearchForm';
 import MoviesCardList from '../MoviesCardList/MoviesCardList';
 
 export default function Movies(props) {
-  const { moviesToRender, savedMovies } = props;
-
-  function onButtonClick(movieId) {
-    // eslint-disable-next-line no-console
-    console.log(movieId);
-  }
+  const { moviesToRender, savedMovies, onButtonClick } = props;
 
   return (
     <main className="movies">

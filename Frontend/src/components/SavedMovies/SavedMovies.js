@@ -5,22 +5,14 @@ import MoviesCardList from '../MoviesCardList/MoviesCardList';
 
 export default function Movies(props) {
   // Get movies saved by user
-  const { savedMovies } = props;
-
-  // Create state for component
-  const [savedByUserMovies, setSavedByUserMovies] = React.useState(savedMovies);
-
-  // Button click handler
-  function onButtonClick(movieId) {
-    setSavedByUserMovies(savedByUserMovies.filter((movie) => movie.movieId !== movieId));
-  }
+  const { savedMovies, onButtonClick } = props;
 
   return (
     <main className="saved-movies">
       <SearchForm />
       <MoviesCardList
-        moviesToRender={savedByUserMovies}
-        savedMovies={savedByUserMovies}
+        moviesToRender={savedMovies}
+        savedMovies={savedMovies}
         onButtonClick={onButtonClick}
         isSavedMovies
       />
