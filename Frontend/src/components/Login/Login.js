@@ -67,8 +67,8 @@ export default function Login(props) {
   return (
     <main className="login">
       <FullPageForm name="login" title="Рады видеть!" buttonText="Войти" questionText="Ещё не зарегистрированы?" linkText="Регистрация" linkPath="/signup" onSubmit={handleSubmit} isValid={formValidation.isValid} error={error}>
-        <FormInput name="email" label="E-mail" type="email" autoComplete="email" value={formValue.email} onChange={handleChange} errorText={formValidation.errors.email} isRequired />
-        <FormInput name="password" label="Пароль" type="password" autoComplete="current-password" value={formValue.password} onChange={handleChange} errorText={formValidation.errors.password} isRequired />
+        <FormInput name="email" label="E-mail" type="email" pattern="\S+@\S+\.\S+" autoComplete="email" value={formValue.email} onChange={handleChange} errorText={formValidation.errors.email} isValid={formValidity.email} isRequired />
+        <FormInput name="password" label="Пароль" type="password" autoComplete="current-password" value={formValue.password} onChange={handleChange} errorText={formValidation.errors.password} isValid={formValidity.password} isRequired />
       </FullPageForm>
     </main>
   );

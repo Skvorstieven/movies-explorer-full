@@ -12,12 +12,14 @@ export default function FormInput(props) {
     isRequired,
     minLength,
     maxLength,
+    isValid,
+    pattern,
   } = props;
   return (
     <label className="form-input">
       <span className="form-input__label-text">{label}</span>
       <input
-        className={errorText ? 'form-input__input form-input__input_error' : 'form-input__input'}
+        className={isValid ? 'form-input__input' : 'form-input__input form-input__input_error'}
         type={type}
         autoComplete={autoComplete}
         name={name}
@@ -27,6 +29,7 @@ export default function FormInput(props) {
         required={isRequired}
         minLength={minLength}
         maxLength={maxLength}
+        pattern={pattern}
       />
       <span className="form-input__error-message">{errorText}</span>
     </label>

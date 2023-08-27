@@ -339,11 +339,6 @@ const fetchedMovies = [
   },
 ];
 
-const user = {
-  email: 'skvorstieven@yandex.ru',
-  name: 'Степан',
-};
-
 const mainApiOptions = {
   baseURL: 'http://localhost:3000',
   headers: {
@@ -351,8 +346,15 @@ const mainApiOptions = {
   },
 };
 
+const movieApiOptions = {
+  baseURL: 'https://api.nomoreparties.co/',
+  headers: {
+    'Content-Type': 'application/json',
+  },
+};
+
 export {
   fetchedMovies,
-  user,
   mainApiOptions,
+  movieApiOptions,
 };

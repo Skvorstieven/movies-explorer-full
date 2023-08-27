@@ -27,6 +27,8 @@ export default function MoviesCardList(props) {
     savedMovies,
     isSavedMovies,
     onButtonClick,
+    nothingToShowText,
+    error,
   } = props;
 
   // Get needed amount of movies from array
@@ -58,7 +60,7 @@ export default function MoviesCardList(props) {
         </ul>
       ) : (
         <p className="movies-card-list__not-found-message">
-          {isSavedMovies ? 'Пока нет сохраненных фильмов' : 'По вашему запросу ничего не найдено'}
+          {error ? 'Во время запроса произошла ошибка. Возможно, проблема с соединением или сервер недоступен. Подождите немного и попробуйте ещё раз' : nothingToShowText}
         </p>
       )}
       {loadedMoviesAmount <= moviesToRender.length ? (<button className="movies-card-list__button" type="button" onClick={onLoadMore}>Ещё</button>) : ''}

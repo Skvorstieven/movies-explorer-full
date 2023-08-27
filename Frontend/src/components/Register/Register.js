@@ -71,9 +71,9 @@ export default function Register(props) {
   return (
     <main className="register">
       <FullPageForm name="register" title="Добро пожаловать!" buttonText="Зарегистрироваться" questionText="Уже зарегистрированы?" linkText="Войти" linkPath="/signin" onSubmit={handleSubmit} isValid={formValidation.isValid} error={error}>
-        <FormInput name="name" label="Имя" type="text" autoComplete="given-name" value={formValue.name} onChange={handleChange} errorText={formValidation.errors.name} isRequired minLength={2} maxLength={30} />
-        <FormInput name="email" label="E-mail" type="email" autoComplete="email" value={formValue.email} onChange={handleChange} errorText={formValidation.errors.email} isRequired />
-        <FormInput name="password" label="Пароль" type="password" autoComplete="new-password" value={formValue.password} onChange={handleChange} errorText={formValidation.errors.password} isRequired />
+        <FormInput name="name" label="Имя" type="text" autoComplete="given-name" value={formValue.name} onChange={handleChange} errorText={formValidation.errors.name} isValid={formValidation.isValid} isRequired minLength={2} maxLength={30} />
+        <FormInput name="email" label="E-mail" type="email" autoComplete="email" pattern="\S+@\S+\.\S+" value={formValue.email} onChange={handleChange} errorText={formValidation.errors.email} isValid={formValidation.isValid} isRequired />
+        <FormInput name="password" label="Пароль" type="password" autoComplete="new-password" value={formValue.password} onChange={handleChange} errorText={formValidation.errors.password} isValid={formValidation.isValid} isRequired />
       </FullPageForm>
     </main>
   );

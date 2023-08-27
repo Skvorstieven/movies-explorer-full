@@ -1,5 +1,6 @@
 .movies-card-list {
   padding: 80px 0;
+  animation: fade-in 0.5s ease-in-out forwards;
 }
 
 .movies-card-list__list {
@@ -63,5 +64,14 @@
     grid-template-columns: repeat( auto-fill, 300px );
     column-gap: 0;
     row-gap: 16px;
+  }
+}
+
+@keyframes fade-in {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
   }
 }

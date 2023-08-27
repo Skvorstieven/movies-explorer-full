@@ -11,7 +11,12 @@ export default function Card(props) {
     onButtonClick,
   } = props;
 
-  const { nameRU, thumbnail, duration } = movie;
+  const {
+    nameRU,
+    image,
+    duration,
+    trailerLink,
+  } = movie;
 
   // Creat state for card
   const [isSaved, setIsSaved] = React.useState(isAlreadySaved);
@@ -29,7 +34,7 @@ export default function Card(props) {
     </button>
   );
 
-  // Button fo SavedMovies component
+  // Button for SavedMovies component
   const savedMoviesButton = (
     <button className="movies-card__button" type="button" onClick={onClick}>
       <img className="movies-card__icon" src={deleteIconPath} alt="Удалить фильм" />
@@ -46,7 +51,9 @@ export default function Card(props) {
           {`${Math.floor(duration / 60)}ч ${duration % 60}м`}
         </p>
       </div>
-      <img className="movies-card__thumbnail" src={thumbnail} alt={nameRU} />
+      <a className="movies-card__link" href={trailerLink} target="_blank" rel="noreferrer">
+        <img className="movies-card__thumbnail" src={image} alt={nameRU} />
+      </a>
       {isSavedMovies ? savedMoviesButton : moviesButton}
     </li>
   );
