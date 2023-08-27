@@ -13,7 +13,11 @@ export default function SearchForm(props) {
   function handleSubmit(e) {
     e.preventDefault();
 
-    onSearchSubmit(searchValue);
+    onSearchSubmit(searchValue, selectShortMovies);
+  }
+
+  function handleCheckboxChange(shortMoviesOnly) {
+    onSearchSubmit(searchValue, shortMoviesOnly);
   }
 
   function handleChange(e) {
@@ -26,7 +30,7 @@ export default function SearchForm(props) {
         <input className="search-form__input" type="search" placeholder="Фильм" name="search" value={searchValue} onChange={handleChange} required />
         <button className="search-form__button" type="submit">Поиск</button>
       </form>
-      <FilterCheckbox isChecked={selectShortMovies} setIsChecked={setSelectShortMovies} text="Короткометражки" name="short-movies-filter" />
+      <FilterCheckbox isChecked={selectShortMovies} setIsChecked={setSelectShortMovies} onCheckboxChange={handleCheckboxChange} text="Короткометражки" name="short-movies-filter" />
     </div>
   );
 }

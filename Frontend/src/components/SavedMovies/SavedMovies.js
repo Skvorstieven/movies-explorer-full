@@ -23,13 +23,13 @@ export default function Movies(props) {
 
   const search = new Search({ storageNeeded: false });
 
-  function handleSavedMoviesSearch(searchKey) {
+  function handleSavedMoviesSearch(searchKey, shortMoviesOnly) {
     setIsLoading(true);
     mainApi
       .getSavedMovies()
       .then((res) => {
         if (res) {
-          setSavedMovies(search.searchFilter(res, searchKey, selectShortMovies));
+          setSavedMovies(search.searchFilter(res, searchKey, shortMoviesOnly));
         }
       })
       .finally(() => {

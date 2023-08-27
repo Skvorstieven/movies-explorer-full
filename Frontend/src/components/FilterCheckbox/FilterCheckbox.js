@@ -2,11 +2,16 @@ import React from 'react';
 
 export default function FilterCheckbox(props) {
   const {
-    isChecked, setIsChecked, text, name,
+    isChecked,
+    setIsChecked,
+    onCheckboxChange,
+    text,
+    name,
   } = props;
 
   // Change checkbox state
   function onChange() {
+    onCheckboxChange(!isChecked);
     setIsChecked(!isChecked);
   }
 

@@ -37,13 +37,13 @@ export default function Movies(props) {
   }
 
   // Function to handle movie search
-  function handleMoviesSearch(searchKey) {
+  function handleMoviesSearch(searchKey, shortMoviesOnly) {
     setIsInitialState(false);
     setIsLoading(true);
     handleGetMovies()
       .then((res) => {
         if (res) {
-          setFoundMovies(search.searchFilter(res, searchKey, selectShortMovies));
+          setFoundMovies(search.searchFilter(res, searchKey, shortMoviesOnly));
         }
       })
       .finally(() => {
