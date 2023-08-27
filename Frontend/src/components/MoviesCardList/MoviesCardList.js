@@ -1,27 +1,8 @@
-import React from 'react';
-
+import React, { useState, useEffect } from 'react';
 import MoviesCard from '../MoviesCard/MoviesCard';
 
 export default function MoviesCardList(props) {
-  // Get viewport width
-  const windowWidth = window.innerWidth;
-
-  // Calculate how many cards to show depending on vp width
-  function calculateMoviesAmount() {
-    if (windowWidth >= 1280) {
-      return 12;
-    } if (windowWidth >= 768) {
-      return 8;
-    }
-    return 5;
-  }
-
-  // Get movies amount
-  const moviesAmountOnMount = calculateMoviesAmount();
-
-  // Create state for movies
-  const [loadedMoviesAmount, setLoadedMoviesAmount] = React.useState(moviesAmountOnMount);
-
+  // Destructure props for readability
   const {
     moviesToRender,
     savedMovies,
@@ -31,19 +12,55 @@ export default function MoviesCardList(props) {
     error,
   } = props;
 
-  // Get needed amount of movies from array
-  const loadedMovies = moviesToRender.slice(0, loadedMoviesAmount);
+  // State to hold the movies to display
+  const [loadedMovies, setLoadedMovies] = useState([]);
 
-  // More button handler
-  function onLoadMore() {
-    setLoadedMoviesAmount(loadedMoviesAmount + moviesAmountOnMount);
+  // Function to calculate how many cards to show based on viewport width
+  function calculateMoviesAmount() {
+    if (window.innerWidth >= 1280) {
+      return 12;
+    } if (window.innerWidth >= 768) {
+      return 8;
+    }
+    return 5;
   }
+
+  // State for the number of loaded movies
+  const [loadedMoviesAmount, setLoadedMoviesAmount] = useState(calculateMoviesAmount());
+
+  // Handler for the "Load More" button
+  function onLoadMore() {
+    setLoadedMoviesAmount(loadedMoviesAmount + calculateMoviesAmount());
+  }
+
+  // Update loaded movies whenever moviesToRender or loadedMoviesAmount changes
+  useEffect(() => {
+    const newLoadedMovies = moviesToRender.slice(0, loadedMoviesAmount);
+    setLoadedMovies(newLoadedMovies);
+  }, [moviesToRender, loadedMoviesAmount]);
+
+  // Update loadedMoviesAmount when viewport width changes and set loaded movies accordingly
+  useEffect(() => {
+    function handleResize() {
+      const newAmount = calculateMoviesAmount();
+      setLoadedMoviesAmount(newAmount);
+    }
+
+    // Add event listener for viewport width changes
+    window.addEventListener('resize', handleResize);
+
+    // Remove event listener when the component unmounts
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
 
   return (
     <div className="movies-card-list">
       {moviesToRender.length !== 0 ? (
         <ul className="movies-card-list__list">
           {loadedMovies.map((movie) => {
+            // Check if the movie is already saved
             const isAlreadySaved = savedMovies.some(
               (savedMovie) => savedMovie.movieId === movie.movieId,
             );
@@ -60,11 +77,17 @@ export default function MoviesCardList(props) {
         </ul>
       ) : (
         <p className="movies-card-list__not-found-message">
-          {error ? 'Во время запроса произошла ошибка. Возможно, проблема с соединением или сервер недоступен. Подождите немного и попробуйте ещё раз' : nothingToShowText}
+          {error
+            ? 'Во время запроса произошла ошибка. Возможно, проблема с соединением или сервер недоступен. Подождите немного и попробуйте ещё раз'
+            : nothingToShowText}
         </p>
       )}
-      {loadedMoviesAmount <= moviesToRender.length ? (<button className="movies-card-list__button" type="button" onClick={onLoadMore}>Ещё</button>) : ''}
+      {/* Show "Load More" button if there are more movies to load */}
+      {loadedMoviesAmount <= moviesToRender.length && (
+        <button className="movies-card-list__button" type="button" onClick={onLoadMore}>
+          Ещё
+        </button>
+      )}
     </div>
-
   );
 }

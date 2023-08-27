@@ -4,26 +4,45 @@ import SearchForm from '../SearchForm/SearchForm';
 import MoviesCardList from '../MoviesCardList/MoviesCardList';
 import Preloader from '../Preloader/Preloader';
 
+import mainApi from '../../utils/MainApi';
+import Search from '../../utils/Search';
+
 export default function Movies(props) {
   // Get movies saved by user
   const {
     savedMovies,
+    setSavedMovies,
     onButtonClick,
-    selectShortMovies,
-    setSelectShortMovies,
     error,
     isLoading,
-    onSearchSubmit,
+    setIsLoading,
   } = props;
 
   const [searchValue, setSearchValue] = React.useState('');
+  const [selectShortMovies, setSelectShortMovies] = React.useState(false);
+
+  const search = new Search({ storageNeeded: false });
+
+  function handleSavedMoviesSearch(searchKey) {
+    setIsLoading(true);
+    mainApi
+      .getSavedMovies()
+      .then((res) => {
+        if (res) {
+          setSavedMovies(search.searchFilter(res, searchKey, selectShortMovies));
+        }
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+  }
 
   return (
     <main className="saved-movies">
       <SearchForm
         selectShortMovies={selectShortMovies}
         setSelectShortMovies={setSelectShortMovies}
-        onSearchSubmit={onSearchSubmit}
+        onSearchSubmit={handleSavedMoviesSearch}
         searchValue={searchValue}
         setSearchValue={setSearchValue}
       />

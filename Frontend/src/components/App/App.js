@@ -15,7 +15,6 @@ import ProtectedRoute from '../ProtectedRoute/ProtectedRoute';
 import CurrentUserContext from '../../contexts/CurrentUserContext';
 
 import mainApi from '../../utils/MainApi';
-import movieApi from '../../utils/MoviesApi';
 
 function App() {
   // Create states to manage application data and UI states
@@ -24,73 +23,7 @@ function App() {
   const [profileIsEditable, setProfileIsEditable] = React.useState(false);
   const [isAuthorized, setIsAuthorized] = React.useState(false);
   const [savedByUserMovies, setSavedByUserMovies] = React.useState([]);
-  const [foundMovies, setFoundMovies] = React.useState([]);
-  const [selectShortMovies, setSelectShortMovies] = React.useState(false);
-  const [isMoviesInitialState, setIsMoviesInitialState] = React.useState(true);
   const [isLoading, setIsLoading] = React.useState(false);
-  const [movieSearchValue, setMovieSearchValue] = React.useState('');
-
-  // Function to fetch movies from an API
-  function handleGetMovies() {
-    return movieApi
-      .fetchMovies()
-      .catch((err) => {
-        setFetchError(err.message);
-      })
-      .finally(() => {
-        setIsLoading(false);
-      });
-  }
-
-  // Function to filter movies based on search criteria
-  function searchFilter(arr, searchKey, shortMoviesOnly) {
-    const searchResults = arr.filter((item) => {
-      if (shortMoviesOnly) {
-        return Object.keys(item).some(
-          (key) => item[key].toString().toLowerCase().includes(searchKey.toString().toLowerCase())
-            && item.duration <= 40,
-        );
-      }
-      return Object.keys(item).some(
-        (key) => item[key].toString().toLowerCase().includes(searchKey.toString().toLowerCase()),
-      );
-    });
-
-    // Save the search key and result to local storage
-    localStorage.setItem('lastSearch', JSON.stringify({ searchKey, searchResults, shortMoviesOnly }));
-
-    return searchResults;
-  }
-
-  // Function to handle movie search
-  function handleMoviesSearch(searchKey) {
-    setIsMoviesInitialState(false);
-    setIsLoading(true);
-    handleGetMovies()
-      .then((res) => {
-        if (res) {
-          setFoundMovies(searchFilter(res, searchKey, selectShortMovies));
-        }
-      })
-      .finally(() => {
-        setIsLoading(false);
-      });
-  }
-
-  function handleSavedMoviesSearch(searchKey) {
-    setIsMoviesInitialState(false);
-    setIsLoading(true);
-    mainApi
-      .getSavedMovies()
-      .then((res) => {
-        if (res) {
-          setSavedByUserMovies(searchFilter(res, searchKey, selectShortMovies));
-        }
-      })
-      .finally(() => {
-        setIsLoading(false);
-      });
-  }
 
   // Get the navigate function from react-router-dom
   const navigate = useNavigate();
@@ -207,9 +140,6 @@ function App() {
 
   // Use useEffect to check the user's token and fetch saved movies on component mount
   React.useEffect(() => {
-    const lastSearch = JSON.parse(localStorage.getItem('lastSearch'));
-    const { searchKey, searchResults, shortMoviesOnly } = lastSearch;
-
     mainApi
       .checkToken()
       .then((res) => {
@@ -217,11 +147,6 @@ function App() {
       })
       .then(() => {
         handleGetSavedMovies();
-        if (lastSearch) {
-          setMovieSearchValue(searchKey);
-          setSelectShortMovies(shortMoviesOnly);
-          setFoundMovies(searchResults);
-        }
       })
       .catch((err) => {
         setFetchError(err.message);
@@ -241,17 +166,12 @@ function App() {
     <>
       <Header isLanding={false} isAuthorized={isAuthorized} />
       <Movies
-        moviesToRender={foundMovies}
         savedMovies={savedByUserMovies}
         onButtonClick={handleCardButtonClick}
-        selectShortMovies={selectShortMovies}
-        setSelectShortMovies={setSelectShortMovies}
         isLoading={isLoading}
+        setIsLoading={setIsLoading}
         error={fetchError}
-        onSearchSubmit={handleMoviesSearch}
-        isInitialState={isMoviesInitialState}
-        searchValue={movieSearchValue}
-        setSearchValue={setMovieSearchValue}
+        setError={setFetchError}
       />
       <Footer />
     </>
@@ -263,12 +183,11 @@ function App() {
       <SavedMovies
         moviesToRender={savedByUserMovies}
         savedMovies={savedByUserMovies}
+        setSavedMovies={setSavedByUserMovies}
         onButtonClick={handleCardButtonClick}
-        selectShortMovies={selectShortMovies}
-        setSelectShortMovies={setSelectShortMovies}
         error={fetchError}
         isLoading={isLoading}
-        onSearchSubmit={handleSavedMoviesSearch}
+        setIsLoading={setIsLoading}
       />
       <Footer />
     </>
