@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import MoviesCard from '../MoviesCard/MoviesCard';
 
+import { moviesAmount, serverErrorMessage } from '../../utils/constants';
+
 export default function MoviesCardList(props) {
   // Destructure props for readability
   const {
@@ -18,11 +20,11 @@ export default function MoviesCardList(props) {
   // Function to calculate how many cards to show based on viewport width
   function calculateMoviesAmount() {
     if (window.innerWidth >= 1280) {
-      return 12;
+      return moviesAmount.desktop;
     } if (window.innerWidth >= 768) {
-      return 8;
+      return moviesAmount.tablet;
     }
-    return 5;
+    return moviesAmount.tablet;
   }
 
   // State for the number of loaded movies
@@ -59,26 +61,20 @@ export default function MoviesCardList(props) {
     <div className="movies-card-list">
       {moviesToRender.length !== 0 ? (
         <ul className="movies-card-list__list">
-          {loadedMovies.map((movie) => {
-            // Check if the movie is already saved
-            const isAlreadySaved = savedMovies.some(
-              (savedMovie) => savedMovie.movieId === movie.movieId,
-            );
-            return (
-              <MoviesCard
-                key={movie.movieId}
-                movie={movie}
-                isAlreadySaved={isAlreadySaved}
-                isSavedMovies={isSavedMovies}
-                onButtonClick={onButtonClick}
-              />
-            );
-          })}
+          {loadedMovies.map((movie) => (
+            <MoviesCard
+              key={movie.movieId}
+              movie={movie}
+              savedMovies={savedMovies}
+              isSavedMovies={isSavedMovies}
+              onButtonClick={onButtonClick}
+            />
+          ))}
         </ul>
       ) : (
         <p className="movies-card-list__not-found-message">
           {error
-            ? 'Во время запроса произошла ошибка. Возможно, проблема с соединением или сервер недоступен. Подождите немного и попробуйте ещё раз'
+            ? serverErrorMessage
             : nothingToShowText}
         </p>
       )}

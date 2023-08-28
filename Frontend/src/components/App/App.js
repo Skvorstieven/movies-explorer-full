@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useRoutes, useNavigate } from 'react-router-dom';
 
 import Header from '../Header/Header';
@@ -18,12 +18,12 @@ import mainApi from '../../utils/MainApi';
 
 function App() {
   // Create states to manage application data and UI states
-  const [currentUser, setCurrentUser] = React.useState('');
-  const [fetchError, setFetchError] = React.useState('');
-  const [profileIsEditable, setProfileIsEditable] = React.useState(false);
-  const [isAuthorized, setIsAuthorized] = React.useState(false);
-  const [savedByUserMovies, setSavedByUserMovies] = React.useState([]);
-  const [isLoading, setIsLoading] = React.useState(false);
+  const [currentUser, setCurrentUser] = useState({});
+  const [fetchError, setFetchError] = useState('');
+  const [profileIsEditable, setProfileIsEditable] = useState(false);
+  const [isAuthorized, setIsAuthorized] = useState(false);
+  const [savedByUserMovies, setSavedByUserMovies] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   // Get the navigate function from react-router-dom
   const navigate = useNavigate();
@@ -42,27 +42,33 @@ function App() {
 
   // Functions to handle user login, logout, and registration
   function handleLogoutClick() {
-    mainApi.logout();
-    setIsAuthorized(false);
-    setCurrentUser('');
-    localStorage.clear();
+    mainApi.logout()
+      .then(() => {
+        setIsAuthorized(false);
+        setCurrentUser('');
+        localStorage.clear();
+      })
+      .catch((err) => {
+        setFetchError(err.message);
+      });
   }
 
   function handleLogin(res) {
     setCurrentUser(res);
     setIsAuthorized(true);
-    handleGetSavedMovies();
-    navigate('/', { replace: true });
   }
 
   function handleLoginClick(reqBody) {
-    mainApi
+    return mainApi
       .authorize(reqBody)
       .then((res) => {
         handleLogin(res);
       })
       .catch((err) => {
         setFetchError(err.message);
+      })
+      .finally(() => {
+        navigate('/movies', { replace: true });
       });
   }
 
@@ -78,8 +84,8 @@ function App() {
   function handleSaveMovie(movie) {
     mainApi
       .saveMovie(movie)
-      .then(() => {
-        handleGetSavedMovies();
+      .then((res) => {
+        setSavedByUserMovies([...savedByUserMovies, res]);
       })
       .catch((err) => {
         setFetchError(err.message);
@@ -95,9 +101,6 @@ function App() {
         setSavedByUserMovies(
           savedByUserMovies.filter((cardMovie) => cardMovie.movieId !== movie.movieId),
         );
-      })
-      .then(() => {
-        handleGetSavedMovies();
       })
       .catch((err) => {
         setFetchError(err.message);
@@ -115,19 +118,19 @@ function App() {
 
   // Function to handle user registration
   function handleRegisterClick(reqBody) {
-    mainApi
+    return mainApi
       .register(reqBody)
-      .then(() => {
-        navigate('/', { replace: true });
-      })
       .catch((err) => {
         setFetchError(err.message);
+      })
+      .finally(() => {
+        handleLoginClick({ email: reqBody.email, password: reqBody.password });
       });
   }
 
   // Function to handle user profile updates
   function handleUpdateUserClick(reqBody) {
-    mainApi
+    return mainApi
       .updateUser(reqBody)
       .then((res) => {
         setProfileIsEditable(false);
@@ -139,7 +142,7 @@ function App() {
   }
 
   // Use useEffect to check the user's token and fetch saved movies on component mount
-  React.useEffect(() => {
+  useEffect(() => {
     mainApi
       .checkToken()
       .then((res) => {
@@ -177,23 +180,19 @@ function App() {
     </>
   );
 
-  const savedMovies = (
+  const savedMoviesSection = (
     <>
       <Header isLanding={false} isAuthorized={isAuthorized} />
       <SavedMovies
-        moviesToRender={savedByUserMovies}
         savedMovies={savedByUserMovies}
-        setSavedMovies={setSavedByUserMovies}
         onButtonClick={handleCardButtonClick}
         error={fetchError}
-        isLoading={isLoading}
-        setIsLoading={setIsLoading}
       />
       <Footer />
     </>
   );
 
-  const profile = (
+  const profileSection = (
     <>
       <Header isLanding={false} isAuthorized={isAuthorized} />
       <Profile
@@ -213,8 +212,8 @@ function App() {
     { path: '/signup', element: <Register onRegisterClick={handleRegisterClick} error={fetchError} setError={setFetchError} /> },
     { path: '/signin', element: <Login onLoginClick={handleLoginClick} error={fetchError} setError={setFetchError} /> },
     { path: '/movies', element: <ProtectedRoute loggedIn={isAuthorized} element={movies} /> },
-    { path: '/saved-movies', element: <ProtectedRoute loggedIn={isAuthorized} element={savedMovies} /> },
-    { path: '/profile', element: <ProtectedRoute loggedIn={isAuthorized} element={profile} /> },
+    { path: '/saved-movies', element: <ProtectedRoute loggedIn={isAuthorized} element={savedMoviesSection} /> },
+    { path: '/profile', element: <ProtectedRoute loggedIn={isAuthorized} element={profileSection} /> },
     { path: '*', element: <NotFound /> },
   ];
 

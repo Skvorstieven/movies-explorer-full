@@ -1,17 +1,14 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import CurrentUserContext from '../../contexts/CurrentUserContext';
 import useFormWithValidation from '../../utils/useFormWithValidation';
+import { profileUpdateSuccessMessage } from '../../utils/constants';
 
 export default function Profile(props) {
-  // Get current user info
+  // Get current user info from context
   const currentUser = React.useContext(CurrentUserContext);
 
-  // Get navigate
-  const navigate = useNavigate();
-
-  // Get logout handler
   const {
     onLogoutClick,
     onUpdateUserClick,
@@ -21,22 +18,32 @@ export default function Profile(props) {
     setIsEditable,
   } = props;
 
-  // Turn on form validation
+  // Get navigate function
+  const navigate = useNavigate();
+
+  // Create form validation object
   const formValidation = useFormWithValidation(false);
 
-  // Create states for form
+  // State for form values
   const [formValue, setFormValue] = React.useState({
     name: '',
     email: '',
   });
 
+  // State for form validity
   const [formValidity, setFormValidity] = React.useState({
     name: true,
     email: true,
   });
 
-  // Clear inputs
-  function ClearInputs() {
+  // State for success message
+  const [successMessage, setSuccessMessage] = React.useState('');
+
+  // State to track if form data matches current user data
+  const [isCurrentUserData, setIsCurrentUserData] = React.useState(true);
+
+  // Function to clear form inputs
+  function clearInputs() {
     setFormValue({
       name: currentUser.name,
       email: currentUser.email,
@@ -47,19 +54,25 @@ export default function Profile(props) {
     });
   }
 
-  // Clear error
-  function ClearError() {
+  // Function to clear form error
+  function clearError() {
     setError('');
   }
 
-  // Clear form on mount
-  React.useEffect(() => {
-    ClearInputs();
-    ClearError();
+  // Function to clear success message
+  function clearSuccessMessage() {
+    setSuccessMessage('');
+  }
+
+  // Clear form data and error messages on component mount
+  useEffect(() => {
+    clearInputs();
+    clearError();
+    clearSuccessMessage();
   }, []);
 
-  // Set current user info as form values
-  React.useEffect(() => {
+  // Set current user info as form values when currentUser changes
+  useEffect(() => {
     setFormValue({
       name: currentUser.name,
       email: currentUser.email,
@@ -70,16 +83,20 @@ export default function Profile(props) {
   function handleSubmit(e) {
     e.preventDefault();
 
-    onUpdateUserClick(formValue);
+    setIsEditable(false);
 
-    ClearInputs();
+    onUpdateUserClick(formValue)
+      .then(() => {
+        setSuccessMessage(profileUpdateSuccessMessage);
+      });
 
+    clearInputs();
     formValidation.resetForm();
   }
 
   // Input change handler
   function handleChange(e) {
-    ClearError();
+    clearError();
     setFormValue({ ...formValue, [e.target.name]: e.target.value });
     formValidation.handleChange(e);
     setFormValidity({ ...formValidity, [e.target.name]: e.target.checkValidity() });
@@ -87,6 +104,7 @@ export default function Profile(props) {
 
   // Edit button click handler
   function onEditClick() {
+    clearSuccessMessage();
     setIsEditable(true);
   }
 
@@ -96,6 +114,15 @@ export default function Profile(props) {
     setIsEditable(false);
     navigate('/');
   }
+
+  // Check if form data matches current user data
+  useEffect(() => {
+    if (formValue.name === currentUser.name && formValue.email === currentUser.email) {
+      setIsCurrentUserData(true);
+    } else {
+      setIsCurrentUserData(false);
+    }
+  }, [formValue]);
 
   return (
     <main className="profile">
@@ -143,11 +170,13 @@ export default function Profile(props) {
             />
           </label>
         </div>
+
         <div className="profile__button-wrapper">
+          <span className="profile__success-message">{successMessage}</span>
+          <span className="profile__error">{formValidation.errors.name || formValidation.errors.email || error}</span>
           <button className={`profile__button ${isEditable ? 'profile__button_hidden' : ''}`} type="button" onClick={onEditClick}>Редактировать</button>
           <button className={`profile__button profile__button_type_logout ${isEditable ? 'profile__button_hidden' : ''}`} type="button" onClick={handleLogoutClick}>Выйти из аккаунта</button>
-          <span className="profile__error">{formValidation.errors.name || formValidation.errors.email || error}</span>
-          <button className={`profile__button profile__button_type_submit ${isEditable ? '' : 'profile__button_hidden'}`} type="submit">Сохранить</button>
+          <button className={`profile__button profile__button_type_submit ${isEditable ? '' : 'profile__button_hidden'} ${!formValidation.isValid || isCurrentUserData ? 'profile__button_disabled' : ''}`} type="submit" disabled={!formValidation.isValid}>Сохранить</button>
         </div>
       </form>
     </main>

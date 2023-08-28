@@ -15,13 +15,14 @@ export default function FullPageForm(props) {
     isValid,
     error,
     children,
+    disabled,
   } = props;
 
   return (
     <div className="full-page-form">
       <Logo />
       <h2 className="full-page-form__title">{title}</h2>
-      <form className="full-page-form__form" name={name} onSubmit={onSubmit} noValidate>
+      <form className="full-page-form__form" name={name} onSubmit={onSubmit} noValidate disabled={disabled}>
         {children}
         <div className="full-page-form__button-wrapper">
           <span className="full-page-form__error">{error}</span>

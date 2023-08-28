@@ -1,14 +1,14 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 
 import savedIconPath from '../../images/icons/saved-movie-icon.svg';
 import deleteIconPath from '../../images/icons/delete-movie-icon.svg';
 
-export default function Card(props) {
+export default function MoviesCard(props) {
   const {
     movie,
-    isAlreadySaved,
     isSavedMovies,
     onButtonClick,
+    savedMovies,
   } = props;
 
   const {
@@ -18,13 +18,18 @@ export default function Card(props) {
     trailerLink,
   } = movie;
 
-  // Creat state for card
-  const [isSaved, setIsSaved] = React.useState(isAlreadySaved);
+  // Create state to determine if the movie is saved
+  const [isSaved, setIsSaved] = useState(false);
 
-  // Click handler
+  // Effect to check if the movie is already saved when savedMovies or movie changes
+  useEffect(() => {
+    const isAlreadySaved = savedMovies.some((item) => item.movieId === movie.movieId);
+    setIsSaved(isAlreadySaved);
+  }, [savedMovies, movie]);
+
+  // Click handler for the button
   function onClick() {
     onButtonClick(movie, isSaved);
-    setIsSaved(!isSaved);
   }
 
   // Button for Movies component

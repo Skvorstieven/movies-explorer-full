@@ -4,14 +4,12 @@ export default function FilterCheckbox(props) {
   const {
     isChecked,
     setIsChecked,
-    onCheckboxChange,
     text,
     name,
   } = props;
 
   // Change checkbox state
   function onChange() {
-    onCheckboxChange(!isChecked);
     setIsChecked(!isChecked);
   }
 

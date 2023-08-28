@@ -14,6 +14,7 @@ export default function FormInput(props) {
     maxLength,
     isValid,
     pattern,
+    disabled,
   } = props;
   return (
     <label className="form-input">
@@ -30,6 +31,7 @@ export default function FormInput(props) {
         minLength={minLength}
         maxLength={maxLength}
         pattern={pattern}
+        disabled={disabled}
       />
       <span className="form-input__error-message">{errorText}</span>
     </label>

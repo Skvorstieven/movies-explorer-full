@@ -1,40 +1,50 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 
 import SearchForm from '../SearchForm/SearchForm';
 import MoviesCardList from '../MoviesCardList/MoviesCardList';
-import Preloader from '../Preloader/Preloader';
 
-import mainApi from '../../utils/MainApi';
 import Search from '../../utils/Search';
 
+import { nothingToShowText } from '../../utils/constants';
+
 export default function Movies(props) {
-  // Get movies saved by user
+  // Destructure props
   const {
     savedMovies,
-    setSavedMovies,
     onButtonClick,
     error,
-    isLoading,
-    setIsLoading,
   } = props;
 
-  const [searchValue, setSearchValue] = React.useState('');
-  const [selectShortMovies, setSelectShortMovies] = React.useState(false);
+  // State variables
+  const [searchValue, setSearchValue] = useState('');
+  const [selectShortMovies, setSelectShortMovies] = useState(false);
+  const [foundMovies, setFoundMovies] = useState([]);
+  const [moviesToRender, setMoviesToRender] = useState([]);
 
+  // Create a new Search instance
   const search = new Search({ storageNeeded: false });
 
+  // Effect to populate foundMovies with savedMovies on component mount
+  useEffect(() => {
+    setFoundMovies(savedMovies);
+  }, [savedMovies]);
+
+  // Function to handle saved movie search
   function handleSavedMoviesSearch(searchKey, shortMoviesOnly) {
-    setIsLoading(true);
-    mainApi
-      .getSavedMovies()
-      .then((res) => {
-        if (res) {
-          setSavedMovies(search.searchFilter(res, searchKey, shortMoviesOnly));
-        }
-      })
-      .finally(() => {
-        setIsLoading(false);
-      });
+    setFoundMovies(search.searchFilter(savedMovies, searchKey, shortMoviesOnly));
+  }
+
+  // Effect to update moviesToRender based on selectShortMovies and foundMovies
+  useEffect(() => {
+    setMoviesToRender(
+      selectShortMovies ? foundMovies.filter((movie) => movie.duration <= 40) : foundMovies,
+    );
+  }, [selectShortMovies, foundMovies]);
+
+  // Function to handle the button click on a movie card
+  function handleCardButtonClick(movie, isSaved) {
+    onButtonClick(movie, isSaved);
+    setFoundMovies(foundMovies.filter((item) => item !== movie));
   }
 
   return (
@@ -46,18 +56,14 @@ export default function Movies(props) {
         searchValue={searchValue}
         setSearchValue={setSearchValue}
       />
-      {isLoading
-        ? (<Preloader />)
-        : (
-          <MoviesCardList
-            moviesToRender={savedMovies}
-            savedMovies={savedMovies}
-            onButtonClick={onButtonClick}
-            nothingToShowText="Пока нет сохраненных фильмов"
-            isSavedMovies
-            error={error}
-          />
-        )}
+      <MoviesCardList
+        moviesToRender={moviesToRender}
+        savedMovies={savedMovies}
+        onButtonClick={handleCardButtonClick}
+        nothingToShowText={nothingToShowText.savedMovies}
+        isSavedMovies
+        error={error}
+      />
     </main>
   );
 }

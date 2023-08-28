@@ -1,13 +1,13 @@
-import React from 'react';
-
+import React, { useState, useEffect } from 'react';
 import movieApi from '../../utils/MoviesApi';
 import Search from '../../utils/Search';
-
 import SearchForm from '../SearchForm/SearchForm';
 import MoviesCardList from '../MoviesCardList/MoviesCardList';
 import Preloader from '../Preloader/Preloader';
+import { nothingToShowText } from '../../utils/constants';
 
 export default function Movies(props) {
+  // Destructuring props
   const {
     savedMovies,
     onButtonClick,
@@ -17,11 +17,16 @@ export default function Movies(props) {
     setError,
   } = props;
 
-  const [isInitialState, setIsInitialState] = React.useState(true);
-  const [foundMovies, setFoundMovies] = React.useState([]);
-  const [searchValue, setSearchValue] = React.useState('');
-  const [selectShortMovies, setSelectShortMovies] = React.useState(false);
+  // State variables
+  const [isInitialState, setIsInitialState] = useState(true);
+  const [fetchedMovies, setFetchedMovies] = useState([]);
+  const [foundMovies, setFoundMovies] = useState([]);
+  const [searchValue, setSearchValue] = useState('');
+  const [selectShortMovies, setSelectShortMovies] = useState(false);
+  const [moviesToRender, setMoviesToRender] = useState([]);
+  const [inputDisabled, setInputDisabled] = React.useState(false);
 
+  // Create a new Search instance with storage capability
   const search = new Search({ storageNeeded: true });
 
   // Function to fetch movies from an API
@@ -30,28 +35,36 @@ export default function Movies(props) {
       .fetchMovies()
       .catch((err) => {
         setError(err.message);
-      })
-      .finally(() => {
-        setIsLoading(false);
       });
   }
 
   // Function to handle movie search
   function handleMoviesSearch(searchKey, shortMoviesOnly) {
     setIsInitialState(false);
-    setIsLoading(true);
-    handleGetMovies()
-      .then((res) => {
-        if (res) {
+    setInputDisabled(true);
+
+    if (fetchedMovies.length === 0) {
+      setIsLoading(true);
+      handleGetMovies()
+        .then((res) => {
+          setFetchedMovies(res);
+          return res;
+        })
+        .then((res) => {
           setFoundMovies(search.searchFilter(res, searchKey, shortMoviesOnly));
-        }
-      })
-      .finally(() => {
-        setIsLoading(false);
-      });
+        })
+        .finally(() => {
+          setIsLoading(false);
+          setInputDisabled(false);
+        });
+    } else {
+      setFoundMovies(search.searchFilter(fetchedMovies, searchKey, shortMoviesOnly));
+      setInputDisabled(false);
+    }
   }
 
-  React.useEffect(() => {
+  // Effect to load the last search from local storage
+  useEffect(() => {
     const lastSearch = JSON.parse(localStorage.getItem('lastSearch'));
 
     if (lastSearch) {
@@ -62,6 +75,13 @@ export default function Movies(props) {
     }
   }, []);
 
+  // Effect to update the movies to render based on select short movies checkbox
+  useEffect(() => {
+    setMoviesToRender(
+      selectShortMovies ? foundMovies.filter((movie) => movie.duration <= 40) : foundMovies,
+    );
+  }, [selectShortMovies, foundMovies]);
+
   return (
     <main className="movies">
       <SearchForm
@@ -70,20 +90,25 @@ export default function Movies(props) {
         onSearchSubmit={handleMoviesSearch}
         searchValue={searchValue}
         setSearchValue={setSearchValue}
+        disabled={inputDisabled}
       />
-      {isLoading
-        ? (<Preloader />)
-        : (
-          <MoviesCardList
-            moviesToRender={foundMovies}
-            savedMovies={savedMovies}
-            onButtonClick={onButtonClick}
-            isSavedMovies={false}
-            nothingToShowText={isInitialState ? 'Начните поиск' : 'По вашему запросу ничего не найдено'}
-            error={error}
-          />
-        )}
 
+      {isLoading ? (
+        <Preloader />
+      ) : (
+        <MoviesCardList
+          moviesToRender={moviesToRender}
+          savedMovies={savedMovies}
+          onButtonClick={onButtonClick}
+          isSavedMovies={false}
+          nothingToShowText={
+            isInitialState
+              ? nothingToShowText.moviesInitial
+              : nothingToShowText.movies
+          }
+          error={error}
+        />
+      )}
     </main>
   );
 }

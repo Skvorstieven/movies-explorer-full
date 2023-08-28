@@ -113,12 +113,28 @@
   margin: 20px 0 0;
 }
 
+.profile__button_disabled {
+  background: #F8F8F8;
+  color: #C2C2C2;
+  cursor: not-allowed;
+}
+
 .profile__button_hidden {
   display: none;
 }
 
 .profile__error {
   color: #FF004C;
+  font-size: 11px;
+  font-weight: 400;
+  line-height: normal;
+  margin: 0;
+  padding: 0;
+  height: 28px;
+}
+
+.profile__success-message {
+  color: #3DDC84;
   font-size: 11px;
   font-weight: 400;
   line-height: normal;
