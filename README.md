@@ -39,5 +39,9 @@ npm run start - will start a server with hot reload on port 3006;
 
 npm run build - will create production build of frontend;
 
+## Pull request
+
+https://github.com/Skvorstieven/movies-explorer-full/pull/1
+
 
 
