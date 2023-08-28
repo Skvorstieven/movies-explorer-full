@@ -6,7 +6,7 @@ const mainApiOptions = {
 };
 
 const movieApiOptions = {
-  baseURL: 'https://api.nomoreparties.co/',
+  baseURL: 'https://api.nomoreparties.co',
   headers: {
     'Content-Type': 'application/json',
   },

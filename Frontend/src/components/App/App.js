@@ -210,11 +210,11 @@ function App() {
   // Define the routes for the application
   const routes = [
     { path: '/', element: landing },
+    { path: '/signup', element: <Register onRegisterClick={handleRegisterClick} error={fetchError} setError={setFetchError} /> },
+    { path: '/signin', element: <Login onLoginClick={handleLoginClick} error={fetchError} setError={setFetchError} /> },
     { path: '/movies', element: <ProtectedRoute loggedIn={isAuthorized} element={movies} /> },
     { path: '/saved-movies', element: <ProtectedRoute loggedIn={isAuthorized} element={savedMovies} /> },
     { path: '/profile', element: <ProtectedRoute loggedIn={isAuthorized} element={profile} /> },
-    { path: '/signup', element: <Register onRegisterClick={handleRegisterClick} error={fetchError} setError={setFetchError} /> },
-    { path: '/signin', element: <Login onLoginClick={handleLoginClick} error={fetchError} setError={setFetchError} /> },
     { path: '*', element: <NotFound /> },
   ];
 
