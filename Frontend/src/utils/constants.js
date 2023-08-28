@@ -1,5 +1,5 @@
 const mainApiOptions = {
-  baseURL: 'https://skvormovies.nomoreparties.sbs',
+  baseURL: 'https://api.skvormovies.nomoreparties.sbs',
   headers: {
     'Content-Type': 'application/json',
   },
