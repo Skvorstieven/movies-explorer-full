@@ -67,11 +67,11 @@ function App() {
       .then((res) => {
         handleLogin(res);
       })
+      .then(() => {
+        navigate('/movies', { replace: true });
+      })
       .catch((err) => {
         setFetchError(err.message);
-      })
-      .finally(() => {
-        navigate('/movies', { replace: true });
       });
   }
 
@@ -123,11 +123,11 @@ function App() {
   function handleRegisterClick(reqBody) {
     return mainApi
       .register(reqBody)
+      .then(() => {
+        handleLoginClick({ email: reqBody.email, password: reqBody.password });
+      })
       .catch((err) => {
         setFetchError(err.message);
-      })
-      .finally(() => {
-        handleLoginClick({ email: reqBody.email, password: reqBody.password });
       });
   }
 
