@@ -5,7 +5,7 @@ import MoviesCardList from '../MoviesCardList/MoviesCardList';
 
 import Search from '../../utils/Search';
 
-import { nothingToShowText } from '../../utils/constants';
+import { NothingToShowText } from '../../utils/constants';
 
 export default function Movies(props) {
   // Destructure props
@@ -44,7 +44,6 @@ export default function Movies(props) {
   // Function to handle the button click on a movie card
   function handleCardButtonClick(movie, isSaved) {
     onButtonClick(movie, isSaved);
-    setFoundMovies(foundMovies.filter((item) => item !== movie));
   }
 
   return (
@@ -60,7 +59,7 @@ export default function Movies(props) {
         moviesToRender={moviesToRender}
         savedMovies={savedMovies}
         onButtonClick={handleCardButtonClick}
-        nothingToShowText={nothingToShowText.savedMovies}
+        NothingToShowText={NothingToShowText.savedMovies}
         isSavedMovies
         error={error}
       />

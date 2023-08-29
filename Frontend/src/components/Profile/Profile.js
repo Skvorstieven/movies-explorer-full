@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom';
 
 import CurrentUserContext from '../../contexts/CurrentUserContext';
 import useFormWithValidation from '../../utils/useFormWithValidation';
-import { profileUpdateSuccessMessage } from '../../utils/constants';
 
 export default function Profile(props) {
   // Get current user info from context
@@ -16,6 +15,8 @@ export default function Profile(props) {
     setError,
     isEditable,
     setIsEditable,
+    successMessage,
+    setSuccessMessage,
   } = props;
 
   // Get navigate function
@@ -35,9 +36,6 @@ export default function Profile(props) {
     name: true,
     email: true,
   });
-
-  // State for success message
-  const [successMessage, setSuccessMessage] = React.useState('');
 
   // State to track if form data matches current user data
   const [isCurrentUserData, setIsCurrentUserData] = React.useState(true);
@@ -83,12 +81,7 @@ export default function Profile(props) {
   function handleSubmit(e) {
     e.preventDefault();
 
-    setIsEditable(false);
-
-    onUpdateUserClick(formValue)
-      .then(() => {
-        setSuccessMessage(profileUpdateSuccessMessage);
-      });
+    onUpdateUserClick(formValue);
 
     clearInputs();
     formValidation.resetForm();
@@ -162,6 +155,7 @@ export default function Profile(props) {
               placeholder="E-mail"
               name="email"
               autoComplete="email"
+              pattern="\S+@\S+\.\S+"
               required
               onChange={handleChange}
               onBlur={handleChange}
@@ -176,7 +170,7 @@ export default function Profile(props) {
           <span className="profile__error">{formValidation.errors.name || formValidation.errors.email || error}</span>
           <button className={`profile__button ${isEditable ? 'profile__button_hidden' : ''}`} type="button" onClick={onEditClick}>Редактировать</button>
           <button className={`profile__button profile__button_type_logout ${isEditable ? 'profile__button_hidden' : ''}`} type="button" onClick={handleLogoutClick}>Выйти из аккаунта</button>
-          <button className={`profile__button profile__button_type_submit ${isEditable ? '' : 'profile__button_hidden'} ${!formValidation.isValid || isCurrentUserData ? 'profile__button_disabled' : ''}`} type="submit" disabled={!formValidation.isValid}>Сохранить</button>
+          <button className={`profile__button profile__button_type_submit ${isEditable ? '' : 'profile__button_hidden'} ${!formValidation.isValid || isCurrentUserData ? 'profile__button_disabled' : ''}`} type="submit" disabled={!formValidation.isValid || isCurrentUserData}>Сохранить</button>
         </div>
       </form>
     </main>

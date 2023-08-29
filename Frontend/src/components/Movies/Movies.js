@@ -4,7 +4,7 @@ import Search from '../../utils/Search';
 import SearchForm from '../SearchForm/SearchForm';
 import MoviesCardList from '../MoviesCardList/MoviesCardList';
 import Preloader from '../Preloader/Preloader';
-import { nothingToShowText } from '../../utils/constants';
+import { NothingToShowText, LocalStorageKey } from '../../utils/constants';
 
 export default function Movies(props) {
   // Destructuring props
@@ -65,7 +65,7 @@ export default function Movies(props) {
 
   // Effect to load the last search from local storage
   useEffect(() => {
-    const lastSearch = JSON.parse(localStorage.getItem('lastSearch'));
+    const lastSearch = JSON.parse(localStorage.getItem(LocalStorageKey));
 
     if (lastSearch) {
       const { searchKey, searchResults, shortMoviesOnly } = lastSearch;
@@ -101,10 +101,10 @@ export default function Movies(props) {
           savedMovies={savedMovies}
           onButtonClick={onButtonClick}
           isSavedMovies={false}
-          nothingToShowText={
+          NothingToShowText={
             isInitialState
-              ? nothingToShowText.moviesInitial
-              : nothingToShowText.movies
+              ? NothingToShowText.moviesInitial
+              : NothingToShowText.movies
           }
           error={error}
         />

@@ -16,6 +16,8 @@ import CurrentUserContext from '../../contexts/CurrentUserContext';
 
 import mainApi from '../../utils/MainApi';
 
+import { ProfileUpdateSuccessMessageText } from '../../utils/constants';
+
 function App() {
   // Create states to manage application data and UI states
   const [currentUser, setCurrentUser] = useState({});
@@ -24,6 +26,7 @@ function App() {
   const [isAuthorized, setIsAuthorized] = useState(false);
   const [savedByUserMovies, setSavedByUserMovies] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [profileUpdateSuccessMessage, setProfileUpdateSuccessMessage] = React.useState('');
 
   // Get the navigate function from react-router-dom
   const navigate = useNavigate();
@@ -135,6 +138,7 @@ function App() {
       .then((res) => {
         setProfileIsEditable(false);
         setCurrentUser(res);
+        setProfileUpdateSuccessMessage(ProfileUpdateSuccessMessageText);
       })
       .catch((err) => {
         setFetchError(err.message);
@@ -202,6 +206,8 @@ function App() {
         setIsEditable={setProfileIsEditable}
         error={fetchError}
         setError={setFetchError}
+        successMessage={profileUpdateSuccessMessage}
+        setSuccessMessage={setProfileUpdateSuccessMessage}
       />
     </>
   );

@@ -4,6 +4,8 @@ import profileIconPath from '../../images/icons/profile-icon.svg';
 import BurgerMenu from '../BurgerMenu/BurgerMenu';
 import NavigationLink from '../NavigationLink/NavigationLink';
 
+import { PixelWindowWidth } from '../../utils/constants';
+
 export default function Navigation(props) {
   // Get viewport width
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
@@ -22,7 +24,7 @@ export default function Navigation(props) {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  return windowWidth > 768 ? (
+  return windowWidth > PixelWindowWidth.tablet ? (
     <nav className="navigation">
       <ul className="navigation__links">
         <NavigationLink to="/movies">Фильмы</NavigationLink>

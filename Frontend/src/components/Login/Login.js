@@ -52,6 +52,7 @@ export default function Login(props) {
   // Submit handler
   async function handleSubmit(e) {
     e.preventDefault();
+    setInputDisabled(true);
 
     // Call the login handler with the form values
     onLoginClick(formValue)

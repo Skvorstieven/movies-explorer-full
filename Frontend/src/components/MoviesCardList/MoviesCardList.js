@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import MoviesCard from '../MoviesCard/MoviesCard';
 
-import { moviesAmount, serverErrorMessage } from '../../utils/constants';
+import { MoviesAmount, PixelWindowWidth, ServerErrorMessage } from '../../utils/constants';
 
 export default function MoviesCardList(props) {
   // Destructure props for readability
@@ -10,7 +10,7 @@ export default function MoviesCardList(props) {
     savedMovies,
     isSavedMovies,
     onButtonClick,
-    nothingToShowText,
+    NothingToShowText,
     error,
   } = props;
 
@@ -19,12 +19,12 @@ export default function MoviesCardList(props) {
 
   // Function to calculate how many cards to show based on viewport width
   function calculateMoviesAmount() {
-    if (window.innerWidth >= 1280) {
-      return moviesAmount.desktop;
-    } if (window.innerWidth >= 768) {
-      return moviesAmount.tablet;
+    if (window.innerWidth >= PixelWindowWidth.desktop) {
+      return MoviesAmount.desktop;
+    } if (window.innerWidth >= PixelWindowWidth.tablet) {
+      return MoviesAmount.tablet;
     }
-    return moviesAmount.tablet;
+    return MoviesAmount.tablet;
   }
 
   // State for the number of loaded movies
@@ -74,8 +74,8 @@ export default function MoviesCardList(props) {
       ) : (
         <p className="movies-card-list__not-found-message">
           {error
-            ? serverErrorMessage
-            : nothingToShowText}
+            ? ServerErrorMessage
+            : NothingToShowText}
         </p>
       )}
       {/* Show "Load More" button if there are more movies to load */}

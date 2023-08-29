@@ -26,7 +26,7 @@ export default function FullPageForm(props) {
         {children}
         <div className="full-page-form__button-wrapper">
           <span className="full-page-form__error">{error}</span>
-          <button className={isValid ? 'full-page-form__button' : 'full-page-form__button full-page-form__button_disabled'} type="submit" disabled={!isValid}>{buttonText}</button>
+          <button className={isValid || disabled ? 'full-page-form__button' : 'full-page-form__button full-page-form__button_disabled'} type="submit" disabled={!isValid || disabled}>{buttonText}</button>
           <div className="full-page-form__bottom-text-wrapper">
             <span className="full-page-form__question-text">{questionText}</span>
             <Link className="full-page-form__link" to={linkPath}>{linkText}</Link>

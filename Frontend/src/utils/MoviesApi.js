@@ -1,4 +1,4 @@
-import { movieApiOptions } from './constants';
+import { MovieApiOptions } from './constants';
 
 class MovieApi {
   constructor(options) {
@@ -47,6 +47,6 @@ class MovieApi {
   }
 }
 
-const movieApi = new MovieApi(movieApiOptions);
+const movieApi = new MovieApi(MovieApiOptions);
 
 export default movieApi;
