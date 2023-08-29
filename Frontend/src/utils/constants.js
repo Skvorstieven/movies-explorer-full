@@ -1,6 +1,6 @@
 // Configuration options for the main API
 const MainApiOptions = {
-  baseURL: 'http://localhost:3000', // Base URL of the main API
+  baseURL: 'https://api.skvormovies.nomoreparties.sbs/', // Base URL of the main API
   headers: {
     'Content-Type': 'application/json', // Content-Type header for JSON data
   },
