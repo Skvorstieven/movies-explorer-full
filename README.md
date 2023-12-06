@@ -1,37 +1,30 @@
 # movies-explorer-full
-"Movies Explorer" project
+Репозиторий для приложения проекта Movie Explorer, включающий фронтенд и бэкенд части приложения со следующими возможностями: авторизации и регистрации пользователей, операции с карточками и пользователями.
 
-## Backend endpoints
+## Эндпоинты API
 
-/signup - POST will register new user;
+/signup - POST Зарегистрирует нового пользователя;
 
-/signin - POST will authorize user;
+/signin - POST Авторизует пользователя и присылает cookie;
 
-/signout - POST will logout;
+/signout - POST Выходит из аккаунта и очищает cookie;
 
-/users/me - GET will return current user info, PATCH will update current user info;
+/users/me - GET вернет данные о текущем пользователе, PATCH обновит данные о текущем пользователе;
 
-/movies - GET will return list of movies saved by current user, POST will save a new movie;
+/movies - GET вернет список фильмов сохраненных текущим пользователем, POST сохранит новую карточку фильма;
 
-/movies/_id - DELETE will delete movie with '_id';
+/movies/_id - DELETE удалит из списка карточку фильма с '_id';
 
-## Backend scripts
+## Скрипты Бэкенда
 
-npm run start - will start a server;
+npm run start - Запустит сервер;
 
-npm run dev - will start a server with hot reload;
+npm run dev - Запустит сервер в режиме разработки с hot reload;
 
-npm run test - will try to complete autotests for DB and for Endpoints;
+npm run test - Запустит автотесты;
 
-## Frontend scripts
+## Скрипты Фронтенда
 
-npm run start - will start a server with hot reload on port 3006;
+npm run start - Запустит приложение с hot reload;
 
-npm run build - will create production build of frontend;
-
-## Pull request
-
-https://github.com/Skvorstieven/movies-explorer-full/pull/1
-
-
-
+npm run build - Создаст текущую сборку приложения;
