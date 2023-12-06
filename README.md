@@ -1,16 +1,6 @@
 # movies-explorer-full
 "Movies Explorer" project
 
-## Project links
-
-Repository: https://github.com/Skvorstieven/movies-explorer-full
-
-IP: 158.160.108.13
-
-Backend domain: https://api.skvormovies.nomoreparties.sbs
-
-Fronend domain https://skvormovies.nomoreparties.sbs
-
 ## Backend endpoints
 
 /signup - POST will register new user;
