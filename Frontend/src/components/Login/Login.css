@@ -1,0 +1,22 @@
+.login {
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  box-sizing: border-box;
+}
+
+@media screen and (max-width: 768px) {
+  .login {
+    justify-content: center;
+  }
+}
+
+@media screen and (max-width: 450px) {
+  .login {
+    justify-content: flex-start;
+    padding: 0;
+  }
+}

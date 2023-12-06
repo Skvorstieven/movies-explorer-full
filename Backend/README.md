@@ -1,17 +1,15 @@
-# movies-explorer-full
-"Movies Explorer" project
+# movies-explorer-api
+Backend part of the "Movies Explorer" project
 
 ## Project links
 
-Repository: https://github.com/Skvorstieven/movies-explorer-full
+Repository: https://github.com/Skvorstieven/movies-explorer-api
 
-IP: 158.160.108.13
+IP: 158.160.120.39
 
-Backend domain: https://api.skvormovies.nomoreparties.sbs
+Domain: https://api.skvormovies.nomoreparties.sbs
 
-Fronend domain https://skvormovies.nomoreparties.sbs
-
-## Backend endpoints
+## Endpoints
 
 /signup - POST will register new user;
 
@@ -25,23 +23,13 @@ Fronend domain https://skvormovies.nomoreparties.sbs
 
 /movies/_id - DELETE will delete movie with '_id';
 
-## Backend scripts
+## Scripts
 
 npm run start - will start a server;
 
 npm run dev - will start a server with hot reload;
 
 npm run test - will try to complete autotests for DB and for Endpoints;
-
-## Frontend scripts
-
-npm run start - will start a server with hot reload on port 3006;
-
-npm run build - will create production build of frontend;
-
-## Pull request
-
-https://github.com/Skvorstieven/movies-explorer-full/pull/1
 
 
 
